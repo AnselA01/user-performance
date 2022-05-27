@@ -8,11 +8,12 @@ async function getUserComments() {
     refreshToken: '228218038382-uo6p6bzkhTAs684UboXHRHe_e1kqMQ'
   });
 
-  const comments = await reddit.getUser('JungleJohn224').getComments().map(Comment => Comment.body)
+  const comments = await reddit.getUser('MisesAndMarx').getComments().map(Comment => Comment.body)
   console.log(comments[0])
-  if (comments[0].match(/([A-Z]){3}/)) {
-    console.log("here")
+  for (let i = 0; i < comments.length; i++) {
+    if (comments[i].match(/([A-Z]){3}/)) {
+      console.log("here")
+    }
   }
-
 }
 getUserComments()
