@@ -1,4 +1,4 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 import snoowrap from 'snoowrap'
 import axios from 'axios'
 
@@ -9,7 +9,7 @@ const reddit = new snoowrap({
   refreshToken: '228218038382-uo6p6bzkhTAs684UboXHRHe_e1kqMQ'
 });
 
-const  getAccessToken = () => {
+const getAccessToken = () => {
   var accessTokenConfig = {
     method: 'post',
     url: 'https://api.tdameritrade.com/v1/oauth2/token',
@@ -21,78 +21,66 @@ const  getAccessToken = () => {
   return axios(accessTokenConfig).then(response => response.data);
 }
 
-const searchUser = () => {
-  const user = document.getElementById("searchbar").value
-  getUserComments(user)
-}
-
-const failUser = () => {
-  console.log("User not found")
-}
-
-async function getUserComments(user) {
+async function getUserComments() {
+  const user = prompt("Input a user")
   const comments = await reddit.getUser(user).getComments().map(Comment => Comment.body)
-  let match = /\b([A-Z]){2,5}\b/g
+  let match = /\b([A-Z]){2,5}\b/g //find all words that are 2-5 letters long and all capitals
   let matches = []
   for (let i = 0; i < comments.length; i++) {
     let result = comments[i].match(match)
-    if (result) {
+    if (result) { //if match add to matches
       matches.push(result)
+      console.log(result)
     }
-    console.log(comments[i])
-    console.log(result)
   }
   matches = matches.flat()
-  console.log(matches)
-  isSymbol(matches)
-}
 
-const isSymbol = (matches) => {
   let accessToken = getAccessToken()
   let symbols = []
-  for (let i = 0; i < matches.length; i++) {
+  for (let i = 0; i < matches.length; i++) { //check if each in matches is a valid symbol
     var content = {
       method: 'get',
       url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + matches[i] + '&projection=symbol-search',
-      headers: { 
+      headers: {
         'Authorization': accessToken
       }
     };
     axios(content)
-    .then(function (response) {
-      if (Object.keys(response.data).length !== 0) {
-        console.log(response.data)
-        symbols.push(response.data)
-      }
+      .then(function (response) {
+        if (Object.keys(response.data).length !== 0) {
+          symbols.push(response.data)
+        }
+      })
+  }
+  return symbols
+}
+
+const Data = () => {
+  const [symbolsArr, setSymbolsArr] = useState(["test"])
+  const [clicked, setClicked] = useState(false)
+  const getSymbols = async () => {
+    setClicked(true)
+    getUserComments().then(function (response) {
+      setSymbolsArr(response)
     })
   }
-  getData(symbols)
-}
-
-const getData = (symbols) => {
-  for (let i = 0; i < symbols.length; i++) {
-
+  if (!clicked) {
+    getSymbols()
   }
-}
-
-const Header = () => {
-
+  console.log(symbolsArr)
   return (
-    <div>
-      <span className="title">Title Here</span>
-      <span className="search-bar">
-        <input type="text" placeholder="Search for a user..." className="searchbar" id="searchbar"></input>
-        <button onClick={searchUser}>submit</button>
-      </span>
+    <div id="symbol1">
+      {}
     </div>
   )
 }
+
 
 const App = () => {
 
   return (
     <div>
-      <Header />
+      <Data />
     </div>
   )
 }
