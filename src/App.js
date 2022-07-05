@@ -3,7 +3,7 @@ import snoowrap from 'snoowrap'
 import axios from 'axios'
 
 const reddit = new snoowrap({
-  userAgent: 'reddit comment scraper by JungleJohn224',
+  userAgent: 'reddit comment scraper',
   clientId: 'EgPyrKLVLN_aqClKeznBiw',
   clientSecret: 'AUEBpPWEcqf_vCX4dOuBIZ5PpGGDwQ',
   refreshToken: '228218038382-uo6p6bzkhTAs684UboXHRHe_e1kqMQ'
@@ -16,65 +16,78 @@ const getAccessToken = () => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    data: "grant_type=refresh_token&refresh_token=XjcIadXu73isZmpyIZT15UhN3mNp9ILkK3gGy26P0cs9DfBaJKlZqMoCxfuv5WjK0WoSd6%2B6xeprq2kM3qGNfBP3Cpcim38Mk%2FlsSC0fknzqDtJixmfKgqJBge8gv9RvUBd5ac%2BarfoijZguw00IwQH9Gl4yPbcQmE%2FaH8BV9YEDkpo2NrCcX5BON7M0t9XHFsuNhHT0yUq7Qsb7DZeOJGP%2BEysq%2FJ9fDeavKSkv45mt%2BgtA2u2ZULeltj7WR2Bkk8fGS6%2BZc9a%2Fccg%2BzIjowoyL36O1yMpZp%2FnbCNwepfgwT%2B9oXDN73NmNXdBx2bQSO8DsyN354S28Ye%2F%2B2vPAxixRdNZZ7HycpDs4HOeYOMdErR4Na9tMINN7D4Q%2BFOkqwYtCLb91CQuH3paL0sNWW0ZFzm6QbqexAFTe59AhAMCBJ85Wlg9pk1%2BqjqD100MQuG4LYrgoVi%2FJHHvlAZDqws0AsekPNvgb%2FLm9x6UdtaKtz9kcH9b%2FHFkjWThiatgCiEg0XA%2Fl%2FazTCx1YccujE0M2%2BXrdhReqaGX34ZJEoOfSh0MzRA%2BoMJhqHJoiEAid0ycT6Hf9TQ7pIsYhaCQA5dUDfJZ%2B%2FD2AUvmefxzQ4mbFiZcNVPLIOGMzSPY9X0T8Gwg69DId%2Fi6mQLiG6axVsIejer%2BaR3x6GmunBcO4SpcWroyHHZQkPnmc2AH4d9HGvkM33ANMZP38ybfnPgeZUoZX6vO%2BFPFYP%2BFw%2FOnpivZYJpsAzQLZYGNIxB7MZqVmLvX4mpPbsT7vXo5NlbrmNvQLNkiHYBbbtZA2ufJfppDUB4Rw%2FIrR3Ogkz%2F%2F6Qw3ckBDgFSzYQqm6yPB8IBjlUCFc5uRWTtFAjqL2E1DTpS6j%2FDEa%2BKbAze2%2FYzqC6XnFbzXXv6K%2BPY4%3D212FD3x19z9sWBHDJACbC00B75E&access_type=&code=&client_id=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH%40AMER.OAUTHAP&redirect_uri="
+    data: 'grant_type=refresh_token&refresh_token=dNNk7ZThJlDPa9JfI7n8rZcn3ACztpIy7UisNh%2B%2BjDiIbtHy6jgyT7wAPYrLMmBKvHFjl0pAFg5PvbMWsEdN1zl6npO3ut8iql%2BHLObQ0OPiEwUVR%2BEckwtOKW%2B4DHLejgo1v82%2BIMnrWVRhSzJAMsplUe1z3myEqUvKX3JxPMW0vXrT9KS1x9cE%2FiIMiUCBsnpWgJwK49mtl6RP%2B5yBYZUykedyYxj4qqQgQQ7O%2B1TePfW9sphr2x%2Fc1MXHS8aCNHO%2FnZ2uCJ7cZHfN0RRup7taueMHIiBkpP0EEczpvLn7nnNoQzxh2y8gzesUgr67Ou0YylFEekY56ookWZedRk3gLroDfSoYOeOeiJi9p0kyFIgc6pIDasFyzQFK7qBe6OK0roXZASyqAhNovA%2FFeAL406OhrEanjwTZgsGbez6ZAuuaKMNXKU3jRs%2B100MQuG4LYrgoVi%2FJHHvlXL6oA9lmUHfGGkM2AzT5HXHaZTg7OV1yq5chrxyI9I92bqpjwq%2FBQRi2XzRHs%2FT6nog88sxmb60J7lreaxPrAWn7oaHTgwLKyY9ihr3RDvlj8CuKAbHsntECTP%2BLNZgtYgJaX1ci0f4ZRUEGSANeMDY8KIA7kzDUQDGsY51ytSTsd67CPnrifn5RIBUXQJ6s753jnBDUkF1c%2BG84Si%2F%2FyZ2FUumSjH9k392oD7rQGuEeTqRoru9HsoKVkMnLtJt3m1cboD%2FhH3aPL4KG6XlsFaotu4HiZsM0R525xpwicnp0Oncx11JFbTr%2FdoMswRcoaWZx3U0ZKVvKH6d9keUufRPJ%2F5lzsx%2FAKkvKOMqAV8WG6flov84iQa0hT6Nm9xIIJUcE6KZgC5BafJ3UHx1GfG03ZARUK%2Bc7VZBzjw2P52WOnaPoUoPpSTakVHU%3D212FD3x19z9sWBHDJACbC00B75E&access_type=&code=&client_id=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH%40AMER.OAUTHAP&redirect_uri='
   };
+  
   return axios(accessTokenConfig).then(response => response.data);
 }
 
-async function getUserComments() {
-  const user = prompt("Input a user")
-  const comments = await reddit.getUser(user).getComments().map(Comment => Comment.body)
-  let match = /\b([A-Z]){2,5}\b/g //find all words that are 2-5 letters long and all capitals
-  let matches = []
-  for (let i = 0; i < comments.length; i++) {
-    let result = comments[i].match(match)
-    if (result) { //if match add to matches
-      matches.push(result)
-      console.log(result)
-    }
-  }
-  matches = matches.flat()
-
-  let accessToken = getAccessToken()
+async function isSymbol(matches) {
   let symbols = []
   for (let i = 0; i < matches.length; i++) { //check if each in matches is a valid symbol
     var content = {
       method: 'get',
       url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + matches[i] + '&projection=symbol-search',
       headers: {
-        'Authorization': accessToken
+        'Authorization': getAccessToken()
       }
     };
-    axios(content)
-      .then(function (response) {
-        if (Object.keys(response.data).length !== 0) {
-          symbols.push(response.data)
-        }
-      })
-  }
+
+    const response = await axios(content)
+    if (Object.keys(response.data).length !== 0) {
+      symbols.push(matches[i])
+    }
+  }  
   return symbols
 }
 
+async function getUserComments() {
+  const user = prompt("Input a user")
+  const comments = await reddit.getUser(user).getComments().map(Comment => Comment.body)
+  let match = /\b([A-Z]){2,5}\b/g  //find all words that are 2-5 letters long and all capital
+  let matches = []
+  for (let i = 0; i < comments.length; i++) {
+    let result = comments[i].match(match)
+    if (result) { //if is a match, add to matches
+      matches.push(result)
+      console.log(result)
+    }
+  }
+  matches = matches.flat()
+  let symbols = isSymbol(matches)
+
+  return symbols
+}
+
+const numUniqueElements = (array) => {
+  return new Set(array).size
+}
+
 const Data = () => {
-  const [symbolsArr, setSymbolsArr] = useState(["test"])
+  const [symbolsArr, setSymbolsArr] = useState([])
   const [clicked, setClicked] = useState(false)
-  const getSymbols = async () => {
+  const [uniqueElements, setUniqueElements] = useState(0)
+
+  if (!clicked) {
     setClicked(true)
-    getUserComments().then(function (response) {
-      setSymbolsArr(response)
+    getUserComments().then(symbols => {
+      setSymbolsArr(symbols)
+      setUniqueElements(numUniqueElements(symbols))
     })
   }
-  if (!clicked) {
-    getSymbols()
-  }
-  console.log(symbolsArr)
+
+
   return (
-    <div id="symbol1">
-      {}
+    <div>
+      <div>unique elements: {uniqueElements}
+      </div>
+
+      <div id="symbol1">
+        {symbolsArr[0]}
+      </div>
     </div>
   )
 }
-
 
 const App = () => {
 
