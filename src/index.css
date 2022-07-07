@@ -16,6 +16,7 @@ code {
     monospace;
 }
 
-.header {
-  color: white
+.symbolsList {
+  list-style-type: none;
 }
+

@@ -48,52 +48,71 @@ async function getUserComments() {
   let matches = []
   for (let i = 0; i < comments.length; i++) {
     let result = comments[i].match(match)
-    if (result) { //if is a match, add to matches
+    if (result) { //if is a match and is not a duplicate, add to matches
       matches.push(result)
-      console.log(result)
     }
   }
   matches = matches.flat()
-  let symbols = isSymbol(matches)
-
+  let arr = isSymbol(matches)
+  let symbols = Object.values(await arr)
+  symbols = removeDuplicates(symbols)
+  console.log(symbols)
+  
   return symbols
 }
 
-const numUniqueElements = (array) => {
-  return new Set(array).size
+
+
+
+const removeDuplicates = (arr) => {
+  return arr.filter((item, index) => arr.indexOf(item) === index);
 }
 
-const Data = () => {
+async function getPrice(symbol) {
+  const quoteConfig = {
+    method: 'get',
+    url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH',
+    headers: {
+      Authorization: getAccessToken()
+    },
+  };
+  const response = await axios(quoteConfig)
+  return response.data[symbol].lastPrice
+}
+
+const Header = () => {
+  return (
+    <h1>
+      User Stock Mentions
+    </h1>
+  )
+}
+
+const Symbols = () => {
   const [symbolsArr, setSymbolsArr] = useState([])
   const [clicked, setClicked] = useState(false)
-  const [uniqueElements, setUniqueElements] = useState(0)
 
   if (!clicked) {
     setClicked(true)
     getUserComments().then(symbols => {
       setSymbolsArr(symbols)
-      setUniqueElements(numUniqueElements(symbols))
     })
   }
 
-
   return (
     <div>
-      <div>unique elements: {uniqueElements}
-      </div>
-
-      <div id="symbol1">
-        {symbolsArr[0]}
-      </div>
+      <ul className="symbolsList">
+        <li>{symbolsArr}</li>
+      </ul>    
     </div>
   )
 }
 
 const App = () => {
-
   return (
     <div>
-      <Data />
+      <Header />
+      <Symbols />
     </div>
   )
 }
