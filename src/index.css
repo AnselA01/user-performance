@@ -11,6 +11,11 @@ body {
   background-color: black;
 }
 
+h1 {
+  max-width: 95%;
+  margin: auto;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -18,5 +23,20 @@ code {
 
 .symbolsList {
   list-style-type: none;
+}
+
+.comment {
+  background-color: rgb(62, 62, 62);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px
+}
+
+.commentDate {
+  color: gray;
+}
+
+.commentBody {
+  
 }
 

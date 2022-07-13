@@ -22,8 +22,9 @@ const getAccessToken = () => {
   return axios(accessTokenConfig).then(response => response.data);
 }
 
-async function isSymbol(matches) {
+async function isSymbol(matches, comments) {
   let symbols = []
+  let commentMatches = []
   for (let i = 0; i < matches.length; i++) { //check if each in matches is a valid symbol
     var content = {
       method: 'get',
@@ -36,36 +37,56 @@ async function isSymbol(matches) {
     const response = await axios(content)
     if (Object.keys(response.data).length !== 0) {
       symbols.push(matches[i])
+      commentMatches.push(comments[i])
     }
   }  
-  return symbols
+  return {
+    symbols,
+    commentMatches
+  }
 }
 
-async function getUserComments() {
+async function getUser() {
   const user = prompt("Input a user")
-  const comments = await reddit.getUser(user).getComments().map(Comment => Comment.body)
+  const allComments = await reddit.getUser(user).getComments().map(Comment => Comment)
   let match = /\b([A-Z]){2,5}\b/g  //find all words that are 2-5 letters long and all capital
   let matches = []
-  for (let i = 0; i < comments.length; i++) {
-    let result = comments[i].match(match)
+  let comments = []
+  let dates = []
+  for (let i = 0; i < allComments.length; i++) {
+    let result = allComments[i].body.match(match)
     if (result) { //if is a match and is not a duplicate, add to matches
       matches.push(result)
+      comments.push(allComments[i].body)
+      dates.push((allComments[i].created_utc) * 1000)
     }
   }
+  let parsedDates = parseDates(dates)
+
   matches = matches.flat()
-  let arr = isSymbol(matches)
-  let symbols = Object.values(await arr)
-  symbols = removeDuplicates(symbols)
-  console.log(symbols)
-  
-  return symbols
+  let symbols = (await isSymbol(matches, comments)).symbols
+  symbols = Object.values(symbols)
+  console.log("symbol matches: ", symbols)
+  let commentMatches = (await isSymbol(matches, comments)).commentMatches
+  console.log("comment matches: ", commentMatches)
+  return {
+    symbols, 
+    commentMatches,
+    parsedDates
+  }
 }
 
-
-
-
-const removeDuplicates = (arr) => {
-  return arr.filter((item, index) => arr.indexOf(item) === index);
+const parseDates = (dates) => {
+  let parsedDates = []
+  for (let i = 0; i < dates.length; i++) {
+    let date = new Date(dates[i])
+    let workingDate = workingDate += date.toLocaleString('default', { month: 'short' }) + " " + date.getDate() + 
+    ", " + date.getFullYear()
+    console.log(workingDate)
+    parsedDates.push(workingDate)
+  }
+  console.log(parsedDates)
+  return parsedDates
 }
 
 async function getPrice(symbol) {
@@ -82,29 +103,39 @@ async function getPrice(symbol) {
 
 const Header = () => {
   return (
-    <h1>
+    <h1 className="title">
       User Stock Mentions
     </h1>
   )
 }
 
-const Symbols = () => {
-  const [symbolsArr, setSymbolsArr] = useState([])
+const Comments = () => {
   const [clicked, setClicked] = useState(false)
+  const [comments, setComments] = useState([])
 
   if (!clicked) {
     setClicked(true)
-    getUserComments().then(symbols => {
-      setSymbolsArr(symbols)
+    getUser().then(object=> {
+      let commentElements = []
+      for (let i = 0; i < object.commentMatches.length - 1; i++) {
+        let comment = (
+          <div className="comment">
+            <div className="commentDate">{object.parsedDates[i]}</div>
+            <div className="commentBody">{object.commentMatches[i]}</div>
+          </div>
+        )
+        commentElements.push(comment)
+      }
+      setComments(commentElements)
     })
   }
 
   return (
     <div>
-      <ul className="symbolsList">
-        <li>{symbolsArr}</li>
+{      <ul className="symbolsList">
+        <li>{comments}</li>
       </ul>    
-    </div>
+}    </div>
   )
 }
 
@@ -112,7 +143,7 @@ const App = () => {
   return (
     <div>
       <Header />
-      <Symbols />
+      <Comments />
     </div>
   )
 }
