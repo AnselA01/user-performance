@@ -2,8 +2,6 @@ import { useState } from 'react'
 import snoowrap from 'snoowrap'
 import axios from 'axios'
 
-
-
 const reddit = new snoowrap({
   userAgent: 'reddit comment scraper',
   clientId: 'EgPyrKLVLN_aqClKeznBiw',
@@ -18,20 +16,48 @@ async function getAccessToken() {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    data: 'grant_type=refresh_token&refresh_token=dNNk7ZThJlDPa9JfI7n8rZcn3ACztpIy7UisNh%2B%2BjDiIbtHy6jgyT7wAPYrLMmBKvHFjl0pAFg5PvbMWsEdN1zl6npO3ut8iql%2BHLObQ0OPiEwUVR%2BEckwtOKW%2B4DHLejgo1v82%2BIMnrWVRhSzJAMsplUe1z3myEqUvKX3JxPMW0vXrT9KS1x9cE%2FiIMiUCBsnpWgJwK49mtl6RP%2B5yBYZUykedyYxj4qqQgQQ7O%2B1TePfW9sphr2x%2Fc1MXHS8aCNHO%2FnZ2uCJ7cZHfN0RRup7taueMHIiBkpP0EEczpvLn7nnNoQzxh2y8gzesUgr67Ou0YylFEekY56ookWZedRk3gLroDfSoYOeOeiJi9p0kyFIgc6pIDasFyzQFK7qBe6OK0roXZASyqAhNovA%2FFeAL406OhrEanjwTZgsGbez6ZAuuaKMNXKU3jRs%2B100MQuG4LYrgoVi%2FJHHvlXL6oA9lmUHfGGkM2AzT5HXHaZTg7OV1yq5chrxyI9I92bqpjwq%2FBQRi2XzRHs%2FT6nog88sxmb60J7lreaxPrAWn7oaHTgwLKyY9ihr3RDvlj8CuKAbHsntECTP%2BLNZgtYgJaX1ci0f4ZRUEGSANeMDY8KIA7kzDUQDGsY51ytSTsd67CPnrifn5RIBUXQJ6s753jnBDUkF1c%2BG84Si%2F%2FyZ2FUumSjH9k392oD7rQGuEeTqRoru9HsoKVkMnLtJt3m1cboD%2FhH3aPL4KG6XlsFaotu4HiZsM0R525xpwicnp0Oncx11JFbTr%2FdoMswRcoaWZx3U0ZKVvKH6d9keUufRPJ%2F5lzsx%2FAKkvKOMqAV8WG6flov84iQa0hT6Nm9xIIJUcE6KZgC5BafJ3UHx1GfG03ZARUK%2Bc7VZBzjw2P52WOnaPoUoPpSTakVHU%3D212FD3x19z9sWBHDJACbC00B75E&access_type=&code=&client_id=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH%40AMER.OAUTHAP&redirect_uri='
+    data: 'grant_type=refresh_token&refresh_token=qA2TOp1%2FNOYapblrmEgZgWErKVmMuCPZ04ssyLqlQdUh5tad%2B0%2BatiOvzuaQK9gtNWu8a5HJwvxrRYCqbIs95Zex75HAjPeFCGX5%2FBAJiygalU6CuyRTmlAbbNteHPJiJEXXfw7bTtd1zm1tZY3uRBki4SpWUfmd3bxFw%2F3xVKkgiR%2BSzHALC1bSuHWR52XuU5qNFDpC4eJfdDRtZw7na5CZv3VxHfoMBQtA0UAAcCzOV2suckOfDejOBYAZMMrTdWHc%2FCrlASNzIpRHn0wZagG%2BvlO3j%2B2uo%2BGOq4VlwBYFwicKLWlKSHaXC77ni7ljtr1zdnv13NEoiDSafXpRAAcuDeRq2WI7EUGDJFbXiWuT3DVdi4J8YkwVEy2siRBdofwUJS%2Bad5nVIJwKceFMBeZCMNiMmo%2FKAX74yH7jcltnDv2iLySFBxL%2B0gF100MQuG4LYrgoVi%2FJHHvlx93%2F8xwIhYhVrMm8bF7bB26SqeagnEmNBNazRdfVro9M9FrE%2BoBqjKecscssfWrIb3YyM%2BV%2BWQQgc3TPgKh0UPGoC3hgdWPtzUrGfRW6sFvqLg8wZqmxhKaFqlL07Rt0G95PP%2BIrzpew8b6Ec3LbVUWXGjAYcsK2eS2vStM%2BIlT8N0yXh9OuphxAmtsOzVKZ4NqspEFZlb4hAuJeAZtDN%2F1AtioGyW392q382ofmFYrL6xqWBMl6hyp0ZezZ6MD7Mz9ma%2BNKpl9L59z5a75sKOMpNPKZvfynLDo1i5twZXP92QYxyk%2FNjHXS9qY5RkEwCtk7tdpkCs55Dpv7qEzS6WzisdVDrrSaSaBMryohcmTNUNWzDvYJxgpPvEw6psP60Oz8QN3c68E4lArdAc8wVVDN6Y71kyAPG0ETpZv5TxzZa53Dg%2Bfktj1rqwk%3D212FD3x19z9sWBHDJACbC00B75E&access_type=&code=&client_id=WG1FO4PYDJWWP91FFYNCFELNXQRPAJHM%40AMER.OAUTHAP&redirect_uri='
   };
-  
+
   const response = await axios(accessTokenConfig)
   return "Bearer " + response.data.access_token
-} 
+}
 
-async function isSymbol(matches, comments) {
-  let symbols = []
+async function getUser() {
+  const user = prompt("Input a user")
+  const allComments = await reddit.getUser(user).getComments().map(Comment => Comment)
+  let match = /\b([A-Z]){2,5}\b/g
+  let matchDollarSign = /(?:^|\W)$(\w+)(?!\w)/g
+  let matches = []
+  let comments = []
+  let dates = []
+  let links = []
+  for (let i = 0; i < allComments.length; i++) {
+    let result = allComments[i].body.match(match || matchDollarSign)
+    if (result) {
+      matches.push(result)
+      comments.push(allComments[i].body)
+      dates.push((allComments[i].created_utc) * 1000)
+      console.log()
+      links.push("https://www.reddit.com" + allComments[i].permalink)
+    }
+  }
+  let parsedDates = parseDates(dates)
+  matches = matches.flat()
+  let matchesObject = (await isSymbol(user, matches, comments, parsedDates, links))
+  return matchesObject
+}
+
+async function isSymbol(user, matches, comments, dates, links) {
+  let symbolMatches = []
   let commentMatches = []
+  let dateMatches = []
+  let linkMatches = []
+  let prices = []
   for (let i = 0; i < matches.length; i++) { //check if each in matches is a valid symbol
     var content = {
       method: 'get',
-      url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + matches[i] + '&projection=symbol-search',
+      url: 'https://api.tdameritrade.com/v1/instruments?apikey=WG1FO4PYDJWWP91FFYNCFELNXQRPAJHM&symbol=' + matches[i] + '&projection=symbol-search',
       headers: {
         'Authorization': await getAccessToken()
       }
@@ -39,76 +65,69 @@ async function isSymbol(matches, comments) {
 
     const response = await axios(content)
     if (Object.keys(response.data).length !== 0) {
-      symbols.push(matches[i])
+      symbolMatches.push(matches[i])
+      prices.push(await getCurrentPrice(matches[i]))
       commentMatches.push(comments[i])
-    }
-  }  
-  return {
-    symbols,
-    commentMatches
-  }
-}
-
-async function getUser() {
-  const user = prompt("Input a user")
-  const allComments = await reddit.getUser(user).getComments().map(Comment => Comment)
-  let match = /\b([A-Z]){2,5}\b/g  //find all capital words that are 2-5 letters long
-  let matches = []
-  let comments = []
-  let dates = []
-  for (let i = 0; i < allComments.length; i++) {
-    let result = allComments[i].body.match(match)
-    if (result) {
-      matches.push(result)
-      comments.push(allComments[i].body)
-      dates.push((allComments[i].created_utc) * 1000)
+      dateMatches.push(dates[i])
+      linkMatches.push(links[i])
     }
   }
-  let parsedDates = parseDates(dates)
+  symbolMatches.reverse()
+  prices.reverse()
+  commentMatches.reverse()
+  dateMatches.reverse()
+  linkMatches.reverse()
 
-  matches = matches.flat()
-  let symbols = (await isSymbol(matches, comments)).symbols
-  symbols = Object.values(symbols)
-  console.log("symbol matches: ", symbols)
-  let commentMatches = (await isSymbol(matches, comments)).commentMatches
-  console.log("comment matches: ", commentMatches)
   return {
-    symbols, 
+    user,
+    symbolMatches,
+    prices,
     commentMatches,
-    parsedDates
+    dateMatches,
+    linkMatches
   }
 }
+
 
 const parseDates = (dates) => {
   let parsedDates = []
   for (let i = 0; i < dates.length; i++) {
     let date = new Date(dates[i])
-    let workingDate = date.toLocaleString('default', { month: 'short' }) + " " + date.getDate() + 
-    ", " + date.getFullYear()
-    parsedDates.push(workingDate)
+    parsedDates.push(date.toLocaleString('default', { month: 'short' }) + " " + date.getDate() +
+      ", " + date.getFullYear())
   }
-  console.log(parsedDates)
   return parsedDates
 }
 
 async function getCurrentPrice(symbol) {
   const quoteConfig = {
     method: 'get',
-    url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH',
+    url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/quotes?apikey=WG1FO4PYDJWWP91FFYNCFELNXQRPAJHM',
     headers: {
       Authorization: await getAccessToken()
     },
   };
   const response = await axios(quoteConfig)
-  setTimeout(() => {
-  }, "500")
-  return response.data[symbol].lastPrice
+  let price = (response.data[symbol].lastPrice).toFixed(2)
+  let prefix = ""
+  if (response.data[symbol].netChange > 0) prefix = "+"
+  let percentChange = prefix + (response.data[symbol].markPercentChangeInDouble).toFixed(2) + "%"
+  return {
+    price,
+    percentChange
+  }
 }
+
+async function getHistoricPrice(symbol, date) {
+  const quoteConfig = {
+    
+  }
+} 
 
 const Header = () => {
   return (
-    <h1 className="title">
-      User Stock Mentions
+    <h1 className="header">
+      <span id="user"></span>
     </h1>
   )
 }
@@ -119,30 +138,35 @@ const Comments = () => {
 
   if (!clicked) {
     setClicked(true)
-    getUser().then(object => {
-      let commentElements = []
-      for (let i = 0; i < object.commentMatches.length - 1; i++) {
-        getCurrentPrice(object.symbols[i]).then(price => {
+    let commentElements = []
+    getUser().then(userObject => {
+      document.getElementById("user").innerHTML = userObject.user + " Latest Stock Mentions"
+      for (let i = 0; i < userObject.commentMatches.length; i++) {
           let comment = (
-            <div className="comment">
-            <div className="commentDate">{object.parsedDates[i]}</div>
-            <div className="commentBody">{object.commentMatches[i]}</div>
-            <div className="currentPrice">{price}</div>
+            <div key={i} className="comment">
+            <div className="commentDate">
+              {userObject.dateMatches[i]}
+            </div>
+            <a className="commentBody" href={userObject.linkMatches[i]}>
+              {userObject.commentMatches[i]}
+            </a>
+            <div className="currentPrice">
+              {userObject.symbolMatches[i]}: {userObject.prices[i].price} {userObject.prices[i].percentChange}
+            </div>
           </div>
         )
         commentElements.push(comment)
-        })
-      }
-      setComments(commentElements)
-    })
+    }
+  })
+  .then(function() {
+    setComments(commentElements)
+  })
   }
 
   return (
-    <div>
-{      <ul className="symbolsList">
-        <li>{comments}</li>
-      </ul>    
-}    </div>
+    <div className="prices">
+      {comments}
+    </div>  
   )
 }
 

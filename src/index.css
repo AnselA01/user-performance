@@ -1,5 +1,5 @@
 body {
-  max-width: 95%;
+  max-width: 90%;
   margin: auto;
 
   color: white;
@@ -11,25 +11,15 @@ body {
   background-color: black;
 }
 
-h1 {
-  max-width: 95%;
-  margin: auto;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-.symbolsList {
-  list-style-type: none;
+.header {
+  margin-bottom: 1em
 }
 
 .comment {
   background-color: rgb(62, 62, 62);
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px
+  padding: .5em;
+  border-radius: .5em;
+  margin-bottom: .75em
 }
 
 .commentDate {
@@ -37,6 +27,13 @@ code {
 }
 
 .commentBody {
-  
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.commentBody:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
