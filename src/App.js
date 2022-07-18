@@ -24,7 +24,7 @@ async function getAccessToken() {
 }
 
 async function getUser() {
-  const user = prompt("Input a user")
+  const user = prompt("Input a Reddit User")
   const allComments = await reddit.getUser(user).getComments().map(Comment => Comment)
   let match = /\b([A-Z]){2,5}\b/g
   let matchDollarSign = /(?:^|\W)$(\w+)(?!\w)/g
@@ -42,18 +42,18 @@ async function getUser() {
       links.push("https://www.reddit.com" + allComments[i].permalink)
     }
   }
-  let parsedDates = parseDates(dates)
   matches = matches.flat()
-  let matchesObject = (await isSymbol(user, matches, comments, parsedDates, links))
+  let matchesObject = (await isSymbol(user, matches, comments, dates, links))
   return matchesObject
 }
 
 async function isSymbol(user, matches, comments, dates, links) {
   let symbolMatches = []
+  let currentPrices = []
+  let historicPrices = []
   let commentMatches = []
   let dateMatches = []
   let linkMatches = []
-  let prices = []
   for (let i = 0; i < matches.length; i++) { //check if each in matches is a valid symbol
     var content = {
       method: 'get',
@@ -62,32 +62,33 @@ async function isSymbol(user, matches, comments, dates, links) {
         'Authorization': await getAccessToken()
       }
     };
-
     const response = await axios(content)
     if (Object.keys(response.data).length !== 0) {
       symbolMatches.push(matches[i])
-      prices.push(await getCurrentPrice(matches[i]))
+      currentPrices.push(await getCurrentPrice(matches[i]))
+      historicPrices.push(await getHistoricPrice(matches[i], dates[i]))
       commentMatches.push(comments[i])
       dateMatches.push(dates[i])
       linkMatches.push(links[i])
     }
   }
-  symbolMatches.reverse()
-  prices.reverse()
-  commentMatches.reverse()
-  dateMatches.reverse()
-  linkMatches.reverse()
-
-  return {
-    user,
+  dateMatches = parseDates(dateMatches)
+  let userObject = {
+    user,  
     symbolMatches,
-    prices,
+    currentPrices,
+    historicPrices,
     commentMatches,
     dateMatches,
-    linkMatches
+    linkMatches  
   }
+  Object.values(userObject).forEach((array) => {
+    if (array.constructor === Array) {
+      array.reverse()
+    }
+  })
+  return userObject
 }
-
 
 const parseDates = (dates) => {
   let parsedDates = []
@@ -119,9 +120,16 @@ async function getCurrentPrice(symbol) {
 }
 
 async function getHistoricPrice(symbol, date) {
-  const quoteConfig = {
-    
-  }
+  const historicQuoteConfig = {
+    method: 'get',
+    url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=WG1FO4PYDJWWP91FFYNCFELNXQRPAJHM&periodType=day&frequencyType=minute&frequency=1&endDate=' + date + '&startDate=' + date + '&needExtendedHoursData=false',
+    headers: {
+      'Authorization': await getAccessToken(),
+    }
+  };
+  const response = await axios(historicQuoteConfig)
+  let price = (response.data.candles[response.data.candles.length - 1].close)
+  return price
 } 
 
 const Header = () => {
@@ -140,18 +148,19 @@ const Comments = () => {
     setClicked(true)
     let commentElements = []
     getUser().then(userObject => {
-      document.getElementById("user").innerHTML = userObject.user + " Latest Stock Mentions"
+      document.getElementById("user").innerHTML = userObject.user + "'s Latest Stock Mentions"
       for (let i = 0; i < userObject.commentMatches.length; i++) {
           let comment = (
             <div key={i} className="comment">
-            <div className="commentDate">
-              {userObject.dateMatches[i]}
+            <div className="commentDateAndHistoricPrice">
+              <span className="date">{userObject.dateMatches[i]}: </span>
+              <span className="historicPrice">{userObject.historicPrices[i]}</span>
             </div>
             <a className="commentBody" href={userObject.linkMatches[i]}>
               {userObject.commentMatches[i]}
             </a>
             <div className="currentPrice">
-              {userObject.symbolMatches[i]}: {userObject.prices[i].price} {userObject.prices[i].percentChange}
+              {userObject.symbolMatches[i]}: {userObject.currentPrices[i].price} {userObject.currentPrices[i].percentChange}
             </div>
           </div>
         )
