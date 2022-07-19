@@ -24,8 +24,9 @@ async function getAccessToken() {
 }
 
 async function getUser() {
-  const user = prompt("Input a Reddit User")
+  let user = prompt("Input a Reddit User")
   const allComments = await reddit.getUser(user).getComments().map(Comment => Comment)
+  user = allComments[0].author.name
   let match = /\b([A-Z]){2,5}\b/g
   let matchDollarSign = /(?:^|\W)$(\w+)(?!\w)/g
   let matches = []
@@ -54,7 +55,7 @@ async function isSymbol(user, matches, comments, dates, links) {
   let commentMatches = []
   let dateMatches = []
   let linkMatches = []
-  for (let i = 0; i < matches.length; i++) { //check if each in matches is a valid symbol
+  for (let i = 0; i < matches.length; i++) {
     var content = {
       method: 'get',
       url: 'https://api.tdameritrade.com/v1/instruments?apikey=WG1FO4PYDJWWP91FFYNCFELNXQRPAJHM&symbol=' + matches[i] + '&projection=symbol-search',
@@ -74,13 +75,13 @@ async function isSymbol(user, matches, comments, dates, links) {
   }
   dateMatches = parseDates(dateMatches)
   let userObject = {
-    user,  
+    user,
     symbolMatches,
     currentPrices,
     historicPrices,
     commentMatches,
     dateMatches,
-    linkMatches  
+    linkMatches
   }
   Object.values(userObject).forEach((array) => {
     if (array.constructor === Array) {
@@ -130,7 +131,7 @@ async function getHistoricPrice(symbol, date) {
   const response = await axios(historicQuoteConfig)
   let price = (response.data.candles[response.data.candles.length - 1].close)
   return price
-} 
+}
 
 const Header = () => {
   return (
@@ -140,6 +141,7 @@ const Header = () => {
   )
 }
 
+
 const Comments = () => {
   const [clicked, setClicked] = useState(false)
   const [comments, setComments] = useState([])
@@ -147,35 +149,46 @@ const Comments = () => {
   if (!clicked) {
     setClicked(true)
     let commentElements = []
+    let priceDifferences = []
     getUser().then(userObject => {
       document.getElementById("user").innerHTML = userObject.user + "'s Latest Stock Mentions"
       for (let i = 0; i < userObject.commentMatches.length; i++) {
-          let comment = (
-            <div key={i} className="comment">
+        let prefix = ""
+        let priceDifference = (userObject.currentPrices[i].price - userObject.historicPrices[i]).toFixed(2)
+        if (priceDifference > 0) prefix = "+"
+        priceDifferences.push(prefix + ((priceDifference / userObject.historicPrices[i]) * 100).toFixed(2) + "%")
+        let comment = (
+          <div key={i} className="comment">
             <div className="commentDateAndHistoricPrice">
               <span className="date">{userObject.dateMatches[i]}: </span>
               <span className="historicPrice">{userObject.historicPrices[i]}</span>
             </div>
+            <div className="currentPrice">
+              <span className="symbol">{userObject.symbolMatches[i]}:</span> {userObject.currentPrices[i].price} {userObject.currentPrices[i].percentChange}
+            </div>
             <a className="commentBody" href={userObject.linkMatches[i]}>
               {userObject.commentMatches[i]}
             </a>
-            <div className="currentPrice">
-              {userObject.symbolMatches[i]}: {userObject.currentPrices[i].price} {userObject.currentPrices[i].percentChange}
-            </div>
+            <div className="changeSincePosted">Since posted: {priceDifferences[i]}</div>
           </div>
         )
         commentElements.push(comment)
-    }
-  })
-  .then(function() {
-    setComments(commentElements)
-  })
+      }
+    })
+      .then(function () {
+        setComments(commentElements)
+      })
   }
 
   return (
-    <div className="prices">
-      {comments}
-    </div>  
+    <div className="commentsAndSidebar">
+      <div className="commentWrapper">
+        {comments}
+      </div>
+      <div className="sidebar">
+
+      </div>
+    </div>
   )
 }
 

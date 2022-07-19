@@ -15,21 +15,36 @@ body {
   margin-bottom: 1em
 }
 
+.commentsAndSidebar {
+  display: grid;
+  grid-template-columns: 75% auto;
+}
+
 .comment {
   background-color: rgb(62, 62, 62);
   padding: .5em;
   border-radius: .5em;
-  margin-bottom: .75em
+  margin-top: 1em;
+}
+
+.comment:first-child {
+  margin-top: 0px;
 }
 
 .commentDateAndHistoricPrice {
   color: gray;
 }
 
+.symbol {
+  font-weight: bold
+}
+
 .commentBody {
+  font-size: 1.20em;
   font-weight: bold;
   color: white;
   text-decoration: none;
+  margin: .25em, 0, .25em, 0;
 }
 
 .commentBody:hover {
@@ -37,3 +52,10 @@ body {
   cursor: pointer;
 }
 
+.sidebar {
+  background-color: rgb(62, 62, 62);
+  padding: .5em;
+  border-radius: .5em;
+  margin-left: 1.25em;
+
+}
