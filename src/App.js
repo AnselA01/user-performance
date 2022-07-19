@@ -133,30 +133,40 @@ async function getHistoricPrice(symbol, date) {
   return price
 }
 
-const Header = () => {
+const Header = (user) => {
   return (
     <h1 className="header">
-      <span id="user"></span>
+      <div id="user"></div>
     </h1>
   )
 }
 
-
-const Comments = () => {
+const Data = () => {
   const [clicked, setClicked] = useState(false)
   const [comments, setComments] = useState([])
+
+  const [winPercentage, setWinPercentage] = useState(0)
+  const [maxPercentGain, setMaxPercentGain] = useState(0)
+  const [minPercentGain, setMinPercentGain] = useState(0)
+  const [avgPercentGain, setAvgPercentGain] = useState(0)
 
   if (!clicked) {
     setClicked(true)
     let commentElements = []
-    let priceDifferences = []
+    let pricePercentDifferences = []
+    let pricePercDifferencesNums = []
+    let winPercentage = 0
     getUser().then(userObject => {
       document.getElementById("user").innerHTML = userObject.user + "'s Latest Stock Mentions"
       for (let i = 0; i < userObject.commentMatches.length; i++) {
         let prefix = ""
-        let priceDifference = (userObject.currentPrices[i].price - userObject.historicPrices[i]).toFixed(2)
-        if (priceDifference > 0) prefix = "+"
-        priceDifferences.push(prefix + ((priceDifference / userObject.historicPrices[i]) * 100).toFixed(2) + "%")
+        let pricePercentDifference = (userObject.currentPrices[i].price - userObject.historicPrices[i]).toFixed(2)
+        if (pricePercentDifference > 0) {
+          prefix = "+"
+          winPercentage += 1
+        }
+        pricePercDifferencesNums.push(Number(((pricePercentDifference / userObject.historicPrices[i]) * 100).toFixed(2)))
+        pricePercentDifferences.push(prefix + ((pricePercentDifference / userObject.historicPrices[i]) * 100).toFixed(2) + "%")
         let comment = (
           <div key={i} className="comment">
             <div className="commentDateAndHistoricPrice">
@@ -169,11 +179,18 @@ const Comments = () => {
             <a className="commentBody" href={userObject.linkMatches[i]}>
               {userObject.commentMatches[i]}
             </a>
-            <div className="changeSincePosted">Since posted: {priceDifferences[i]}</div>
+            <div className="changeSincePosted">Since posted: {pricePercentDifferences[i]}</div>
           </div>
         )
         commentElements.push(comment)
       }
+
+      setWinPercentage((winPercentage /= commentElements.length).toFixed(2) + "%")
+      setMaxPercentGain(Math.max.apply(null, pricePercDifferencesNums))
+      setMinPercentGain(Math.min.apply(null, pricePercDifferencesNums))
+      const arrSum = pricePercDifferencesNums.reduce((partialSum, a) => partialSum + a, 0);
+      setAvgPercentGain((arrSum/commentElements.length).toFixed(2))
+      document.getElementById("sidebar").style.display = "block"
     })
       .then(function () {
         setComments(commentElements)
@@ -185,8 +202,19 @@ const Comments = () => {
       <div className="commentWrapper">
         {comments}
       </div>
-      <div className="sidebar">
-
+      <div className="sidebar" id="sidebar">
+        <div>
+          Percent correct: {winPercentage}
+        </div>
+        <div>
+          Max % P/L: {maxPercentGain}%
+        </div>
+        <div>
+          Min % P/L: {minPercentGain}%
+        </div>
+        <div>
+          Average % P/L: {avgPercentGain}%
+        </div>
       </div>
     </div>
   )
@@ -196,7 +224,7 @@ const App = () => {
   return (
     <div>
       <Header />
-      <Comments />
+      <Data />
     </div>
   )
 }

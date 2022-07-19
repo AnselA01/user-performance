@@ -53,6 +53,7 @@ body {
 }
 
 .sidebar {
+  display: none;
   background-color: rgb(62, 62, 62);
   padding: .5em;
   border-radius: .5em;
